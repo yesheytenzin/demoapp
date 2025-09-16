@@ -1,0 +1,175 @@
+{% extends "base.html" %}
+
+{% block title %}
+    {% if task %}Edit Task{% else %}New Task{% endif %} - Task Manager
+{% endblock %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto">
+    <div class="bg-white rounded-lg shadow-sm p-6">
+        <!-- Header -->
+        <div class="mb-6">
+            <h1 class="text-2xl font-bold text-gray-900">
+                {% if task %}
+                    ✏️ Edit Task
+                {% else %}
+                    ➕ Create New Task
+                {% endif %}
+            </h1>
+            <p class="text-gray-600 mt-1">
+                {% if task %}
+                    Update your task details
+                {% else %}
+                    Add a new task to your list
+                {% endif %}
+            </p>
+        </div>
+
+        <!-- Task Form -->
+        <form method="POST" class="space-y-6">
+            <!-- Title Field -->
+            <div>
+                <label for="title" class="block text-sm font-medium text-gray-700 mb-2">
+                    Task Title *
+                </label>
+                <input type="text" 
+                       id="title" 
+                       name="title" 
+                       required
+                       value="{{ task.title if task else '' }}"
+                       class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                       placeholder="Enter a descriptive title for your task">
+            </div>
+
+            <!-- Description Field -->
+            <div>
+                <label for="description" class="block text-sm font-medium text-gray-700 mb-2">
+                    Description
+                </label>
+                <textarea id="description" 
+                          name="description" 
+                          rows="4"
+                          class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                          placeholder="Add any additional details about this task (optional)">{{ task.description if task else '' }}</textarea>
+            </div>
+
+            <!-- Due Date Field -->
+            <div>
+                <label for="due_date" class="block text-sm font-medium text-gray-700 mb-2">
+                    Due Date
+                </label>
+                <input type="date" 
+                       id="due_date" 
+                       name="due_date"
+                       value="{{ task.due_date_formatted if task else '' }}"
+                       min="{{ today }}"
+                       class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                <p class="mt-1 text-xs text-gray-500">Optional: Set a deadline for this task</p>
+            </div>
+
+            <!-- Status Field (only show for editing) -->
+            {% if task %}
+            <div>
+                <label for="status" class="block text-sm font-medium text-gray-700 mb-2">
+                    Status
+                </label>
+                <select id="status" 
+                        name="status"
+                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                    <option value="pending" {% if task.status == 'pending' %}selected{% endif %}>
+                        ⏳ Pending
+                    </option>
+                    <option value="completed" {% if task.status == 'completed' %}selected{% endif %}>
+                        ✅ Completed
+                    </option>
+                </select>
+            </div>
+            {% endif %}
+
+            <!-- Form Actions -->
+            <div class="flex items-center justify-between pt-6 border-t border-gray-200">
+                <a href="{{ url_for('dashboard') }}" 
+                   class="text-gray-600 hover:text-gray-800 font-medium">
+                    ← Back to Dashboard
+                </a>
+                
+                <div class="space-x-3">
+                    <button type="button" 
+                            onclick="window.history.back()"
+                            class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 font-medium transition-colors">
+                        Cancel
+                    </button>
+                    <button type="submit" 
+                            class="px-6 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg font-medium transition-colors">
+                        {% if task %}
+                            💾 Update Task
+                        {% else %}
+                            ➕ Create Task
+                        {% endif %}
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <!-- Task Preview (for editing) -->
+    {% if task %}
+    <div class="mt-6 bg-gray-50 rounded-lg p-4">
+        <h3 class="text-sm font-medium text-gray-700 mb-2">Task Details:</h3>
+        <div class="text-sm text-gray-600 space-y-1">
+            <p><strong>Created:</strong> {{ task.created_at.strftime('%B %d, %Y at %I:%M %p') }}</p>
+            {% if task.updated_at != task.created_at %}
+                <p><strong>Last Updated:</strong> {{ task.updated_at.strftime('%B %d, %Y at %I:%M %p') }}</p>
+            {% endif %}
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+<!-- Tips Card -->
+<div class="max-w-2xl mx-auto mt-6">
+    <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+        <h3 class="text-sm font-medium text-blue-900 mb-2">💡 Tips:</h3>
+        <ul class="text-sm text-blue-800 space-y-1">
+            <li>• Use clear, actionable titles (e.g., "Review project proposal" instead of "Work on project")</li>
+            <li>• Add descriptions for complex tasks to provide context</li>
+            <li>• Set due dates to help prioritize your work</li>
+            <li>• You can quickly mark tasks as complete from the dashboard</li>
+        </ul>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// Set minimum date to today
+document.addEventListener('DOMContentLoaded', function() {
+    const dateInput = document.getElementById('due_date');
+    const today = new Date().toISOString().split('T')[0];
+    dateInput.min = today;
+    
+    // Auto-focus on title field
+    document.getElementById('title').focus();
+    
+    // Form validation
+    const form = document.querySelector('form');
+    form.addEventListener('submit', function(e) {
+        const title = document.getElementById('title').value.trim();
+        
+        if (!title) {
+            e.preventDefault();
+            alert('Please enter a task title.');
+            document.getElementById('title').focus();
+            return false;
+        }
+        
+        if (title.length < 3) {
+            e.preventDefault();
+            alert('Task title must be at least 3 characters long.');
+            document.getElementById('title').focus();
+            return false;
+        }
+    });
+});
+</script>
+{% endblock %}

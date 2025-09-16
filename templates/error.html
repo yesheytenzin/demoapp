@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block title %}Error {{ error_code }} - Task Manager{% endblock %}
+
+{% block content %}
+<div class="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-md w-full space-y-8 text-center">
+        <div>
+            <div class="text-8xl mb-4">
+                {% if error_code == 404 %}🔍{% else %}⚠️{% endif %}
+            </div>
+            <h2 class="text-3xl font-bold text-gray-900">
+                Error {{ error_code }}
+            </h2>
+            <p class="mt-2 text-lg text-gray-600">
+                {{ error_message }}
+            </p>
+        </div>
+
+        <div class="space-y-4">
+            {% if error_code == 404 %}
+                <p class="text-gray-500">
+                    The page you're looking for doesn't exist or has been moved.
+                </p>
+            {% else %}
+                <p class="text-gray-500">
+                    Something went wrong on our end. Please try again later.
+                </p>
+            {% endif %}
+
+            <div class="space-y-2">
+                {% if current_user.is_authenticated %}
+                    <a href="{{ url_for('dashboard') }}" 
+                       class="block w-full bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-lg font-medium transition-colors">
+                        🏠 Go to Dashboard
+                    </a>
+                {% else %}
+                    <a href="{{ url_for('login') }}" 
+                       class="block w-full bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-lg font-medium transition-colors">
+                        🔐 Go to Login
+                    </a>
+                {% endif %}
+                
+                <button onclick="window.history.back()" 
+                        class="block w-full bg-gray-500 hover:bg-gray-600 text-white py-2 px-4 rounded-lg font-medium transition-colors">
+                    ← Go Back
+                </button>
+            </div>
+        </div>
+
+        {% if error_code == 500 %}
+        <div class="mt-8 p-4 bg-gray-100 rounded-lg">
+            <p class="text-sm text-gray-600">
+                If this problem persists, please contact support or try refreshing the page.
+            </p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
