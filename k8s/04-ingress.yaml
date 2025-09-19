@@ -6,7 +6,7 @@ apiVersion: networking.k8s.io/v1  # API version for Ingress resources
 kind: Ingress                     # Resource type - HTTP routing rules
 metadata:                         # Ingress information
   name: taskmanager-ingress
-  namespace: 02220177    # 📝 Replace STUDENT_NUMBER with your number
+  namespace: "02220177"    # 📝 Replace STUDENT_NUMBER with your number
   labels:
     app: taskmanager
     student: "02220177"  # 📝 Replace with your student number
@@ -31,7 +31,7 @@ spec:
   #   secretName: taskmanager-tls  # Secret containing TLS certificate
 
   rules:                          # Routing rules
-  - host: 02220177.cstapp.site  # 📝 Replace STUDENT_NUMBER (e.g., taskmanager-0215539.local)
+  - host: "02220177.cstapp.site"  # 📝 Replace STUDENT_NUMBER (e.g., taskmanager-0215539.local)
     http:                         # HTTP routing rules
       paths:                      # URL path routing
       - path: /                   # Root path and all subpaths
