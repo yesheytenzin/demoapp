@@ -24,7 +24,7 @@ metadata:                         # Ingress information
 #spec:
  # ingressClassName: nginx
 
-  spec:
+spec:
   rules:
     - host: "02220177.cstapp.site"
       http:
@@ -44,17 +44,6 @@ metadata:                         # Ingress information
   #   - STUDENT_NUMBER.cstapp.site
   #   secretName: taskmanager-tls  # Secret containing TLS certificate
 
-  rules:                          # Routing rules
-  - host: "02220177.cstapp.site"  # 📝 Replace STUDENT_NUMBER (e.g., taskmanager-0215539.local)
-    http:                         # HTTP routing rules
-      paths:                      # URL path routing
-      - path: /                   # Root path and all subpaths
-        pathType: Prefix          # Path matching type (Prefix, Exact, or ImplementationSpecific)
-        backend:                  # Where to send matching requests
-          service:                # Target service
-            name: taskmanager-service  # Service name (must be in same namespace)
-            port:                 # Service port
-              number: 80          # Port number on the service
 
   # Additional routing rules (examples)
   # - host: api.taskmanager.local    # API subdomain
