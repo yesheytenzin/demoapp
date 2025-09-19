@@ -77,9 +77,3 @@ spec: # Service specification
       protocol: TCP # Network protocol
       name: http # Name for this port mapping
   type: ClusterIP # Service type - accessible only within cluster
-  # Change to LoadBalancer for external access
-
- # template:
-    #spec:
-    #  containers:
-   #     - image: yena5/task-manager:25c2095f7853b12b6c8b1e1443b3061089ec104e
