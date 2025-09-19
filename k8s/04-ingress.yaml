@@ -21,9 +21,23 @@ metadata:                         # Ingress information
 
     # Enable CORS (optional)
     # nginx.ingress.kubernetes.io/enable-cors: "true"
-spec:
-  ingressClassName: nginx
-  # Ingress specification
+#spec:
+ # ingressClassName: nginx
+
+  spec:
+  rules:
+    - host: "02220177.cstapp.site"
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: taskmanager-service
+                port:
+                  number: 80
+
+    # Ingress specification
   # Uncomment for HTTPS/TLS (requires certificate)
   # tls:                          # TLS configuration
   # - hosts:
