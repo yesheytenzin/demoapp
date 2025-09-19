@@ -23,7 +23,7 @@ spec:
     spec:
       containers:
         - name: taskmanager
-          image: yena5/task-manager:25c2095f7853b12b6c8b1e1443b3061089ec104e
+          image: yena5/task-manager:e4df4ae0e9e3e17259eb7217a1505dbb1bc63da6
           ports:
             - containerPort: 8000
               name: http
@@ -34,7 +34,6 @@ spec:
               value: "kubernetes-secret-key-02220177"
             - name: FLASK_ENV
               value: "production"
-
 ---
 # Service - Provides stable network access to the Task Manager Pods
 apiVersion: v1
@@ -54,4 +53,7 @@ spec:
       protocol: TCP
       name: http
   type: ClusterIP
-
+  template:
+    spec:
+      containers:
+        - image: yena5/task-manager:e4df4ae0e9e3e17259eb7217a1505dbb1bc63da6
